@@ -1,0 +1,52 @@
+[project]
+name = "ida-cyberchef"
+version = "0.2.0"
+description = "A Qt-based CyberChef interface designed for malware analysis workflows, particularly in IDA Pro"
+readme = "README.md"
+requires-python = ">=3.10"
+dependencies = [
+    "pydantic>=2.0",
+    "mini-racer>=0.14.1",
+]
+
+[project.optional-dependencies]
+qt = [
+    # for standalone Qt application, no IDA
+    "pyside6>=6.10.0",
+]
+
+[dependency-groups]
+dev = [
+    "pytest>=8.4.2",
+    "pytest-qt>=4.0",
+    "pyside6>=6.10.0",
+    "ruff",
+    "ty",
+    "mypy",
+]
+
+[tool.setuptools.packages.find]
+where = ["ida_cyberchef"]
+
+[project.scripts]
+cyberchef-qt = "ida_cyberchef.main:main"
+
+[tool.pytest.ini_options]
+pythonpath = "."
+testpaths = ["tests"]
+
+[tool.ruff]
+line-length = 120
+target-version = "py310"
+fix = true
+
+[tool.ruff.lint]
+preview = true
+extend-select = ["PLW1514"]  # unspecified-encoding
+ignore = [
+    "UP012",   # allow explicit str.encode("utf-8") for clarity
+    "BLE001",  # broad `except Exception` is intentional at parse/bake/file-IO boundaries
+]
+
+[tool.mypy]
+check_untyped_defs = true
